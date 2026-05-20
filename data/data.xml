@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ESSENCIAL -->
+    <record id="avaliar_template_essencial" model="avaliar.template">
+        <field name="name">essencial</field>
+    </record>
+
+    <!-- GERENCIAL -->
+    <record id="avaliar_template_gerencial" model="avaliar.template">
+        <field name="name">gerencial</field>
+    </record>
+
+</odoo>

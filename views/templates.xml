@@ -1,0 +1,97 @@
+<odoo>
+    <data>
+        <record id="view_avaliacaodesempenho_tree" model="ir.ui.view">
+            <field name="name">avaliacaodesempenho.tree</field>
+            <field name="model">avaliacaodesempenho.avaliacaodesempenho</field>
+            <field name="arch" type="xml">
+                <tree string="Competências">
+                    <field name="name"/>
+                    <field name="competencia_list"/>
+                    <field name="peso"/>
+                    <field name="escala"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_avaliacaodesempenho_form" model="ir.ui.view">
+            <field name="name">avaliacaodesempenho.form</field>
+            <field name="model">avaliacaodesempenho.avaliacaodesempenho</field>
+            <field name="arch" type="xml">
+                <form string="Competência de Desempenho">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" placeholder="Nome da Competência"/>
+                                <field name="competencia_list" placeholder="Tipo de Competência"/>
+                            </group>
+                            <group>
+                                <field name="peso"/>
+                                <field name="escala"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" widget="html" placeholder="Descrição da competência"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="view_comissao_avaliadora_tree" model="ir.ui.view">
+            <field name="name">comissao.avaliadora.tree</field>
+            <field name="model">comissao.avaliadora</field>
+            <field name="arch" type="xml">
+                <tree string="Comissões Avaliadoras">
+                    <field name="name"/>
+                    <field name="funcionario_ids"/>
+                    <field name="avaliador_ids"/>
+                    <field name="departamento_ids"/>
+                </tree>
+            </field>
+        </record>
+<!--        <record id="view_comissao_avaliadora_form" model="ir.ui.view">-->
+<!--            <field name="name">comissao.avaliadora.form</field>-->
+<!--            <field name="model">comissao.avaliadora</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="Comissão Avaliadora">-->
+<!--                    <sheet>-->
+<!--                        <div class="oe_title">-->
+<!--                            <h1>-->
+<!--                                <field name="name" placeholder="Nome da Comissão"/>-->
+<!--                            </h1>-->
+<!--                        </div>-->
+<!--                        <group string="Configuração da Comissão">-->
+<!--                            <group>-->
+<!--                                <field name="departamento_ids"-->
+<!--                                       widget="many2many_tags"-->
+<!--                                       options="{'no_create': False}"/>-->
+
+<!--                                <field name="planilha_ids"-->
+<!--                                       widget="many2many_tags"-->
+<!--                                       options="{'no_create': False}"/>-->
+
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                <field name="funcionario_ids"-->
+<!--                                       widget="many2many_tags"-->
+<!--                                       options="{'no_create': False}"/>-->
+
+<!--                                <field name="avaliador_ids"-->
+<!--                                       widget="many2many_tags"-->
+<!--                                       options="{'no_create': False}"/>-->
+<!--                            </group>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                    <div class="oe_chatter">-->
+<!--                        <field name="message_follower_ids"/>-->
+<!--                        <field name="activity_ids"/>-->
+<!--                        <field name="message_ids"/>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+    </data>
+</odoo>
