@@ -95,17 +95,29 @@ class Avalia(models.Model):
     def _onchange_avaliador_domain(self):
 
         current_employee = self.env.user.employee_id
+        if not current_employee:
+            return {
+                'domain': {
+                    'comissao_list': [('id', '=', False)],
+                    'name': [('id', '=', False)],
+                    'avaliador': [('id', '=', False)]
+                }
+            }
+
+        current_employee_id = current_employee.id
 
         # =========================
         # COMISSÕES ONDE ELE É AVALIADOR
         # =========================
         comissoes_avaliador = self.env['comissao.avaliadora'].search([
-            ('avaliador_ids', 'in', current_employee.id)
+            ('avaliador_ids', 'in', current_employee_id)
         ])
 
         if comissoes_avaliador:
 
-            funcionarios = comissoes_avaliador.mapped('funcionario_ids')
+            funcionario_ids = comissoes_avaliador.with_context(
+                active_test=False
+            ).funcionario_ids.ids
 
             return {
                 'domain': {
@@ -118,12 +130,12 @@ class Avalia(models.Model):
                     # mostra somente funcionários
                     # dessas comissões
                     'name': [
-                        ('id', 'in', funcionarios.ids)
+                        ('id', 'in', funcionario_ids)
                     ],
 
                     # mostra apenas ele como avaliador
                     'avaliador': [
-                        ('id', '=', current_employee.id)
+                        ('id', '=', current_employee_id)
                     ]
                 }
             }
@@ -134,10 +146,12 @@ class Avalia(models.Model):
         else:
 
             comissoes_funcionario = self.env['comissao.avaliadora'].search([
-                ('funcionario_ids', 'in', current_employee.id)
+                ('funcionario_ids', 'in', current_employee_id)
             ])
 
-            avaliadores = comissoes_funcionario.mapped('avaliador_ids')
+            avaliador_ids = comissoes_funcionario.with_context(
+                active_test=False
+            ).avaliador_ids.ids
 
             return {
                 'domain': {
@@ -147,11 +161,11 @@ class Avalia(models.Model):
                     ],
 
                     'name': [
-                        ('id', '=', current_employee.id)
+                        ('id', '=', current_employee_id)
                     ],
 
                     'avaliador': [
-                        ('id', 'in', avaliadores.ids)
+                        ('id', 'in', avaliador_ids)
                     ]
                 }
             }
