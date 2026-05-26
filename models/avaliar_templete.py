@@ -296,7 +296,7 @@ class Avalia(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         if self.name:
-            self.departamento = self.name.department_id.id
+            self.departamento = self.name.sudo().department_id.id
             comissao_templates = self.env['comissao.avaliadora'].search([
                 ('avaliador_ids', 'in', self.avaliador.id)
             ])
