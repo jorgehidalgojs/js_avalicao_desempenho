@@ -37,7 +37,7 @@ class ComissaAvaliadora(models.Model):
 
     name = fields.Char(string='Nome', required=True,tracking=True)
     funcionario_ids = fields.Many2many('hr.employee', string='Funcionários',relation='comissao_avaliadora_funcionario_rel', required=True,tracking=True)
-    cargo = fields.Many2one(related='funcionario_ids.job_id', string='Cargo', store=True,tracking=True)
+    cargo = fields.Many2one(related='funcionario_ids.job_id', related_sudo=True, string='Cargo', store=True,tracking=True)
     departamento_ids = fields.Many2many('hr.department', string='Departamentos', required=True,tracking=True)
     avaliador_ids = fields.Many2many('hr.employee', string='Avaliadores', relation='comissao_avaliadora_avaliador_rel', required=True,tracking=True)
     competencia_list = fields.Many2many('avaliacaodesempenho.avaliacaodesempenho', 'avaliar_comissao_rel', string="Tipo de competência", required =True,tracking=True)
@@ -58,7 +58,7 @@ class ComissaAvaliadora(models.Model):
     @api.depends('funcionario_ids')
     def _compute_cargos(self):
         for record in self:
-            record.cargo_ids = [(6, 0, record.funcionario_ids.mapped('job_id').ids)]
+            record.cargo_ids = [(6, 0, record.funcionario_ids.sudo().mapped('job_id').ids)]
 
     def remove_funcionario(self, employee_id):
         self.ensure_one()
@@ -70,14 +70,14 @@ class ComissaAvaliadora(models.Model):
     @api.onchange('departamento_ids')
     def _onchange_departamento_ids(self):
         domain = [('department_id', 'in', self.departamento_ids.ids)]
-        funcionarios = self.env['hr.employee'].search(domain)
+        funcionarios = self.env['hr.employee'].sudo().search(domain)
         self.funcionario_ids = [(6, 0, funcionarios.ids)]
 
 
     @api.onchange('departamento_ids')
     def _onchange_departamento_ids(self):
         domain = [('department_id', 'in', self.departamento_ids.ids)]
-        funcionarios = self.env['hr.employee'].search(domain)
+        funcionarios = self.env['hr.employee'].sudo().search(domain)
         self.funcionario_ids = [(6, 0, funcionarios.ids)]
     def remove_funcionario(self, employee_id):
         self.ensure_one()
@@ -154,6 +154,5 @@ class AvaliacaoType(models.Model):
                 record.color_nota = 'red'
             else:
                 record.color_nota = 'black'
-
 
 

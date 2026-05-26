@@ -8,10 +8,10 @@ class Individual(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
     name = fields.Many2one('hr.employee', string='Nome', ondelete='cascade', required=True, tracking=True)
-    cargo = fields.Many2one('hr.job', string='Cargo', related='name.job_id', store=True, tracking=True)
-    departamento = fields.Many2one('hr.department', related='name.department_id', string='Departamento', store=True,tracking=True)
+    cargo = fields.Many2one('hr.job', string='Cargo', related='name.job_id', related_sudo=True, store=True, tracking=True)
+    departamento = fields.Many2one('hr.department', related='name.department_id', related_sudo=True, string='Departamento', store=True,tracking=True)
     avaliador = fields.Many2one('hr.employee', string='Avaliador', ondelete='cascade', required=True,tracking=True)
-    cargo_avaliador = fields.Many2one('hr.job', related='avaliador.job_id', string="Cargo do Avaliador", required=True,tracking=True)
+    cargo_avaliador = fields.Many2one('hr.job', related='avaliador.job_id', related_sudo=True, string="Cargo do Avaliador", required=True,tracking=True)
     data_aprovacao = fields.Datetime(string="Data de Aprovação", required=True, default=fields.Datetime.now,tracking=True)
     anotacoes = fields.Char(string='Anotações', required=True,tracking=True)
     status = fields.Selection(

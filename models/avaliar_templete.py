@@ -41,10 +41,10 @@ class Avalia(models.Model):
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
 
     name = fields.Many2one('hr.employee', string='Nome', ondelete='cascade', required=True, tracking=True)
-    cargo = fields.Many2one(related='name.job_id', string='Cargo', store=True,tracking=True)
+    cargo = fields.Many2one(related='name.job_id', related_sudo=True, string='Cargo', store=True,tracking=True)
     departamento = fields.Many2one('hr.department', string='Departamento', store=True,tracking=True)
     avaliador = fields.Many2one('hr.employee', string='Avaliador', ondelete='cascade', required=True, default=lambda self: self.env.user.employee_id.id, tracking=True)
-    cargo_avaliador = fields.Many2one(related='avaliador.job_id', string="Cargo", required=True, tracking=True)
+    cargo_avaliador = fields.Many2one(related='avaliador.job_id', related_sudo=True, string="Cargo", required=True, tracking=True)
     data_aprovacao = fields.Datetime(string="Data", required=True, default=fields.Datetime.now, tracking=True)
     anotacoes = fields.Text(string='Anotacoes', required=True,tracking=True)
     assinatura_colaborador = fields.Char(string="Ass. Colaborador",tracking=True)
@@ -218,7 +218,7 @@ class Avalia(models.Model):
             ], limit=1)
 
             if existente:
-                funcionario_nome = self.env['hr.employee'].browse(funcionario_id).name
+                funcionario_nome = self.env['hr.employee'].sudo().browse(funcionario_id).name
                 raise ValidationError(_(
                     f"O colaborador {funcionario_nome} já foi avaliado este mês ({data.strftime('%B/%Y')}). "
                     "Só poderá ser avaliado novamente no próximo mês."
@@ -250,7 +250,7 @@ class Avalia(models.Model):
                 ('id', '!=', record.id),
             ], limit=1)
             if existente:
-                funcionario_nome = self.env['hr.employee'].browse(funcionario_id).name
+                funcionario_nome = self.env['hr.employee'].sudo().browse(funcionario_id).name
                 raise ValidationError(_(
                     f"O colaborador {funcionario_nome} já foi avaliado este mês ({data.strftime('%B/%Y')}). "
                     "Só poderá ser avaliado novamente no próximo mês."
@@ -370,14 +370,14 @@ class Avalia(models.Model):
 
     @api.model
     def create_comissao_for_employee(self):
-        employees_without_comissao = self.env['hr.employee'].search(
+        employees_without_comissao = self.env['hr.employee'].sudo().search(
             [('id', 'not in', self.env['avaliar.funcionario'].mapped('name.id'))])
         for employee in employees_without_comissao:
             comissao_template_id = self.env['comissao.avaliadora'].search([], limit=1)  # Assuming you have a comissao.avaliadora to assign
             if comissao_template_id:
                 self.env['avaliar.funcionario'].create({
                     'name': employee.id,
-                    'cargo': employee.job_id.name,
+                    'cargo': employee.job_id.id,
                     'departamento': employee.department_id.id,
                     'comissao_list': [(4, comissao_template_id.id)],
                 })
