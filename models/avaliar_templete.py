@@ -386,7 +386,7 @@ class Avalia(models.Model):
         for rec in self:
             rec.write({
                 'status': 'espera',
-                'assinatura_colaborador': self.name.name,
+                'assinatura_colaborador': rec.name.sudo().name,
             })
 
         return True
@@ -402,7 +402,7 @@ class Avalia(models.Model):
             if record.status != 'espera':
                 raise UserError("A transição de estado é permitida apenas de 'Em espera' para 'Aprovado'.")
             record.write({'status': 'aprovar',
-                          'assinatura_avaliador': self.avaliador.name
+                          'assinatura_avaliador': record.avaliador.sudo().name
                           })
     def action_concluir(self):
         self.write({'status': 'concluir'})
